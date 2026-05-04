@@ -1,4 +1,5 @@
 package ecosystem.entities;
 
-public class StaticEntity {
+public class StaticEntity extends AbstractEntity {
+
 }
