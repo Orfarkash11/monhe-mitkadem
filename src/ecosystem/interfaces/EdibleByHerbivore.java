@@ -1,4 +1,4 @@
 package ecosystem.interfaces;
 
-public interface EdibleByHerbivore {
+public interface EdibleByHerbivore extends Consumable {
 }

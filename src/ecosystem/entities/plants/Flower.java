@@ -1,4 +1,6 @@
 package ecosystem.entities.plants;
 
-public class Flower {
+import ecosystem.interfaces.Reproducible;
+
+public class Flower extends Plant {
 }

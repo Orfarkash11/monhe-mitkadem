@@ -9,13 +9,14 @@ import ecosystem.entities.LivingEntity;
 import ecosystem.interfaces.*;
 import java.util.List;
 
-public class Animal extends LivingEntity implements EdibleByCarnivore, Movable, Consumable, Eater, Sensory {
+public abstract class Animal extends LivingEntity implements EdibleByCarnivore, Movable, Eater, Sensory {
     private int visionRange = 2;
     private MovementStrategy movementStrategy;
     private FeedingBehavior feedingBehavior;
 
-    public Animal(Position position, Environment environment) {
-        super(position, environment);
+    public Animal(Position position, char symbol, int energy, int maxEnergy,
+                  MovementStrategy movementStrategy, FeedingBehavior feedingBehavior) {
+        super();
     }
 
     protected boolean setMovementStrategy(MovementStrategy ms) {

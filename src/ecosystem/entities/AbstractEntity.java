@@ -2,17 +2,33 @@ package ecosystem.entities;
 
 import ecosystem.core.Position;
 
-public class AbstractEntity {
+public abstract class AbstractEntity {
     private Position pos;
-    private String symbol;
+    private char symbol;
     private boolean alive = true;
+
+    public AbstractEntity(Position pos, char symbol) {
+        this.pos = pos;
+        this.symbol = symbol;
+    }
 
     public Position getPosition() {
         return this.pos;
     }
+    //Set position and check if the function is success with the action
+    protected boolean setPosition(Position position){
+        if (this.pos != null) {
+            this.pos = position;
+            return true;
+        }
+        return false;
+    }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    public boolean setAlive(boolean alive) {
+        if (alive){
+            this.alive = alive;
+            return true;}
+        return false;
     }
 
     public boolean isAlive() {
@@ -20,8 +36,14 @@ public class AbstractEntity {
     }
 
     protected boolean setSymbol(char symbol) {
-        this.symbol = String.valueOf(symbol);
-        return true;
+        if (this.symbol == symbol){
+            return true;
+        }
+        if (symbol != ' '){
+            this.symbol = symbol;
+            return true;
+        }
+        return false;
     }
 
     public String toString() {

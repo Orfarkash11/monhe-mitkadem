@@ -1,4 +1,4 @@
 package ecosystem.entities.resources;
 
-public class Rock {
+public class Rock extends Resource {
 }

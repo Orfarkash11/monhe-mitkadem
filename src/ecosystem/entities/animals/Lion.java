@@ -6,8 +6,8 @@ import ecosystem.behaviors.ChaseMovement;
 import ecosystem.behaviors.CarnivoreBehavior;
 
 public class Lion extends Animal {
-    public Lion(Position position, Environment environment) {
-        super(position, environment);
+    public Lion(Position position) {
+        super(position);
         setEnergy(100);
         setSymbol('L');
         setMovementStrategy(new ChaseMovement());

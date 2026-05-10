@@ -1,4 +1,6 @@
 package ecosystem.entities.resources;
 
-public class Water {
+import ecosystem.interfaces.Consumable;
+
+public class Water extends Resource implements Consumable {
 }
