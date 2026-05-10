@@ -14,6 +14,14 @@ public class Rabbit extends Animal implements Reproducible {
     private static final Random random = new Random();
 
     /**
+     * Convenience constructor for automatic testing.
+     * @param position initial position.
+     */
+    public Rabbit(Position position) {
+        this(position, null);
+    }
+
+    /**
      * Constructs a Rabbit at the given position.
      * @param position initial position.
      * @param environment environment reference (not used in constructor).
@@ -62,10 +70,14 @@ public class Rabbit extends Animal implements Reproducible {
         };
 
         for (int[] dir : directions) {
-            Position target = new Position(current.getRow() + dir[0], current.getCol() + dir[1]);
-            if (env.isInsideBounds(target) && env.isPositionFree(target)) {
-                Rabbit child = new Rabbit(target, env);
-                return env.addEntity(child);
+            int r = current.getRow() + dir[0];
+            int c = current.getCol() + dir[1];
+            if (r >= 0 && c >= 0) {
+                Position target = new Position(r, c);
+                if (env.isInsideBounds(target) && env.isPositionFree(target)) {
+                    Rabbit child = new Rabbit(target, env);
+                    return env.addEntity(child);
+                }
             }
         }
 

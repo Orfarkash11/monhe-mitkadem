@@ -47,11 +47,15 @@ public class Flower extends Plant {
                 if (dr == 0 && dc == 0) continue;
                 
                 if (Math.abs(dr) + Math.abs(dc) <= 2) {
-                    Position target = new Position(row + dr, col + dc);
-                    if (env.isInsideMap(target) && env.isPositionFree(target)) {
-                        Flower child = new Flower(target);
-                        if (env.addEntity(child)) {
-                            createdCount++;
+                    int r = row + dr;
+                    int c = col + dc;
+                    if (r >= 0 && c >= 0) {
+                        Position target = new Position(r, c);
+                        if (env.isInsideMap(target) && env.isPositionFree(target)) {
+                            Flower child = new Flower(target);
+                            if (env.addEntity(child)) {
+                                createdCount++;
+                            }
                         }
                     }
                 }

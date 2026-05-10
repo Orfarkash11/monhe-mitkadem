@@ -3,7 +3,6 @@ package ecosystem.entities.resources;
 import ecosystem.interfaces.Consumable;
 
 import ecosystem.core.Position;
-import ecosystem.interfaces.Consumable;
 
 /**
  * Represents a water source that provides nutrition without being consumed.

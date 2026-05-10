@@ -41,12 +41,16 @@ public class EscapeMovement implements MovementStrategy {
             for (int dc = -1; dc <= 1; dc++) {
                 if (dr == 0 && dc == 0) continue;
                 
-                Position candidate = new Position(current.getRow() + dr, current.getCol() + dc);
-                if (env.isInsideBounds(candidate) && env.isPositionFree(candidate)) {
-                    int dist = candidate.distanceTo(threatPos);
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        bestPos = candidate;
+                int r = current.getRow() + dr;
+                int c = current.getCol() + dc;
+                if (r >= 0 && c >= 0) {
+                    Position candidate = new Position(r, c);
+                    if (env.isInsideBounds(candidate) && env.isPositionFree(candidate)) {
+                        int dist = candidate.distanceTo(threatPos);
+                        if (dist > maxDist) {
+                            maxDist = dist;
+                            bestPos = candidate;
+                        }
                     }
                 }
             }

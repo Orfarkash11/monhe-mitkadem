@@ -35,10 +35,14 @@ public class RandomMovement implements MovementStrategy {
         int startIdx = random.nextInt(directions.length);
         for (int i = 0; i < directions.length; i++) {
             int[] dir = directions[(startIdx + i) % directions.length];
-            Position target = new Position(row + dir[0], col + dir[1]);
+            int r = row + dir[0];
+            int c = col + dir[1];
             
-            if (env.isInsideBounds(target) && env.isPositionFree(target)) {
-                return env.moveEntity(entity, target);
+            if (r >= 0 && c >= 0) {
+                Position target = new Position(r, c);
+                if (env.isInsideBounds(target) && env.isPositionFree(target)) {
+                    return env.moveEntity(entity, target);
+                }
             }
         }
         return false;

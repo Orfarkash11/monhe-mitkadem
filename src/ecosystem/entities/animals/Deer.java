@@ -10,6 +10,14 @@ import ecosystem.core.Position;
  */
 public class Deer extends Animal {
     /**
+     * Convenience constructor for automatic testing.
+     * @param position initial position.
+     */
+    public Deer(Position position) {
+        this(position, null);
+    }
+
+    /**
      * Constructs a Deer at the given position.
      * @param position initial position.
      * @param environment environment reference (not used in constructor but part of original stub).

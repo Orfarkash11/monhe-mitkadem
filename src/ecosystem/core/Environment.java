@@ -147,9 +147,13 @@ public class Environment {
         for (int dr = -maxDistance; dr <= maxDistance; dr++) {
             for (int dc = -maxDistance; dc <= maxDistance; dc++) {
                 if (Math.abs(dr) + Math.abs(dc) <= maxDistance) {
-                    Position candidate = new Position(origin.getRow() + dr, origin.getCol() + dc);
-                    if (isPositionFree(candidate)) {
-                        return candidate;
+                    int r = origin.getRow() + dr;
+                    int c = origin.getCol() + dc;
+                    if (r >= 0 && c >= 0) {
+                        Position candidate = new Position(r, c);
+                        if (isPositionFree(candidate)) {
+                            return candidate;
+                        }
                     }
                 }
             }
@@ -162,6 +166,14 @@ public class Environment {
      */
     public List<AbstractEntity> getEntities() {
         return new ArrayList<>(this.entities);
+    }
+
+    /**
+     * Alias for getEntities to support automatic testing.
+     * @return a shallow copy of the entity list.
+     */
+    public List<AbstractEntity> getEntitiesCopy() {
+        return getEntities();
     }
 
     /**
@@ -201,5 +213,42 @@ public class Environment {
         Environment that = (Environment) o;
         if (rows != that.rows || cols != that.cols) return false;
         return entities.equals(that.entities);
+    }
+
+    /**
+     * Moves an entity to a new position if it is free.
+     * @param entity the entity to move.
+     * @param newPosition the destination position.
+     * @return true if moved successfully.
+     */
+    public boolean moveEntity(AbstractEntity entity, Position newPosition) {
+        if (entity == null || newPosition == null) return false;
+        if (!isPositionFree(newPosition)) return false;
+        return entity.setPosition(newPosition);
+    }
+
+    /**
+     * Finds a free position near the origin within maxDistance.
+     * @param origin the starting position.
+     * @param maxDistance the maximum Manhattan distance.
+     * @return a free position, or null if none found.
+     */
+    public Position findFreeNearbyPosition(Position origin, int maxDistance) {
+        if (origin == null) return null;
+        for (int dr = -maxDistance; dr <= maxDistance; dr++) {
+            for (int dc = -maxDistance; dc <= maxDistance; dc++) {
+                if (Math.abs(dr) + Math.abs(dc) <= maxDistance) {
+                    int r = origin.getRow() + dr;
+                    int c = origin.getCol() + dc;
+                    if (r >= 0 && c >= 0) {
+                        Position candidate = new Position(r, c);
+                        if (isPositionFree(candidate)) {
+                            return candidate;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

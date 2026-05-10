@@ -34,7 +34,7 @@ public class SimulationEngine {
      */
     public void tick() {
         // 1. Get a snapshot of entities to avoid concurrent modification
-        List<AbstractEntity> snapshot = environment.getEntities();
+        List<AbstractEntity> snapshot = environment.getEntitiesCopy();
 
         // 2. Perform actions for all actable entities
         for (AbstractEntity entity : snapshot) {
@@ -44,7 +44,7 @@ public class SimulationEngine {
         }
 
         // 3. Remove dead entities from the environment
-        List<AbstractEntity> currentPopulation = environment.getEntities();
+        List<AbstractEntity> currentPopulation = environment.getEntitiesCopy();
         for (AbstractEntity entity : currentPopulation) {
             if (!entity.isAlive()) {
                 environment.removeEntity(entity);

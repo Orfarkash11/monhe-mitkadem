@@ -39,10 +39,14 @@ public class OakTree extends Plant {
         int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
         for (int[] offset : offsets) {
-            Position target = new Position(row + offset[0], col + offset[1]);
-            if (env.isInsideMap(target) && env.isPositionFree(target)) {
-                OakTree child = new OakTree(target);
-                return env.addEntity(child);
+            int r = row + offset[0];
+            int c = col + offset[1];
+            if (r >= 0 && c >= 0) {
+                Position target = new Position(r, c);
+                if (env.isInsideMap(target) && env.isPositionFree(target)) {
+                    OakTree child = new OakTree(target);
+                    return env.addEntity(child);
+                }
             }
         }
 

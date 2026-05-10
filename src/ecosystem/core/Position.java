@@ -10,13 +10,15 @@ public class Position {
 
     /**
      * Constructs a Position with specified row and column.
-     * Coordinates must be non-negative.
-     * @param row the grid row.
-     * @param col the grid column.
+     * Coordinates must be non-negative or an IllegalArgumentException is thrown.
+     * @param row the grid row (non-negative).
+     * @param col the grid column (non-negative).
+     * @throws IllegalArgumentException if row or col is negative.
      */
     public Position(int row, int col) {
-        if (row < 0) row = 0;
-        if (col < 0) col = 0;
+        if (row < 0 || col < 0) {
+            throw new IllegalArgumentException("Position coordinates must be non-negative: (" + row + ", " + col + ")");
+        }
         this.row = row;
         this.col = col;
     }
