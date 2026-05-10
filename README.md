@@ -1,10 +1,10 @@
 # Ecosystem Simulation — Advanced OOP Assignment 2
 
-פרויקט ג'אווה המדמה מערכת אקולוגית פשוטה על מפה דו-ממדית. הפרויקט נבנה במסגרת קורס תכנות מונחה עצמים מתקדם (Advanced OOP).
+Java project that simulates a simple ecosystem on a 2D map. This project focuses on inheritance, abstract classes, interfaces, polymorphism, and encapsulation within a discrete simulation environment.
 
 ---
 
-## 1. Quick Start / התחלה מהירה
+## 1. Quick Start
 
 ### Windows CMD
 ```cmd
@@ -22,121 +22,122 @@ java -cp out ecosystem.core.SimulationEngine
 
 ---
 
-## 2. Project Goal / מטרת הפרויקט
+## 2. Project Goal
 
-הפרויקט מדמה עולם המכיל חיות, צמחים ומשאבים על גבי רשת.
-כל "פעימה" (Tick) מקדמת את הסימולציה ומאפשרת ליצורים לפעול.
-המימוש מתמקד בעקרונות OOP מתקדמים: ירושה, ממשקים, פולימורפיזם, אנקפסולציה ושימוש בתבנית ה-Delegation עבור התנהגויות תנועה ותזונה.
+The project simulates an ecosystem on a 2D map containing animals, plants, and resources. The simulation advances in discrete steps (ticks) where each entity interacts with its environment. The implementation demonstrates key OOP principles, including a delegation-based behavior system for animal movement and feeding strategies.
 
 ---
 
-## 3. Current Implementation Status / מצב המימוש
+## 3. Current Implementation Status
 
-- [x] Required package structure: **done**
-- [x] Core classes: **done**
-- [x] Interfaces: **done**
-- [x] Entity hierarchy: **done**
-- [x] Animals: **done**
-- [x] Plants: **done**
-- [x] Resources: **done**
-- [x] Behaviors/delegators: **done**
-- [x] Environment: **done**
-- [x] SimulationEngine: **done**
-- [x] Plain Java only: **done**
-- [x] No external libraries: **done**
-
----
-
-## 4. How the Simulation Works / איך הסימולציה עובדת
-
-1. **SimulationEngine** מאתחל או מקבל אובייקט **Environment**.
-2. ה-**Environment** מנהל את כל היצורים (Entities) בעולם.
-3. בכל פעימה (Tick) נוצר "צילום מצב" (Snapshot) של היצורים הקיימים.
-4. כל יצור חי שמממש את ממשק ה-**Actable** מבצע את פעולת ה-`act(environment)`.
-5. חיות יכולות לנוע, לאכול או להתרבות. צמחים יכולים לגדול ולהתרבות.
-6. יצורים שמתים (energy=0) מוסרים מהעולם.
-7. בסיום הפעימה מודפסת המפה המעודכנת וסיכום של אוכלוסיית העולם.
+- [x] Required package structure
+- [x] Core classes
+- [x] Interfaces
+- [x] Entity hierarchy
+- [x] Animals
+- [x] Plants
+- [x] Resources
+- [x] Behaviors/delegators
+- [x] Environment
+- [x] SimulationEngine
+- [x] Plain Java only
+- [x] No external libraries
 
 ---
 
-## 5. Package Guide / מדריך חבילות
+## 4. How the Simulation Works
+
+1. **SimulationEngine** creates or receives an **Environment** instance.
+2. **Environment** manages all entities and spatial logic.
+3. Each **tick** creates a snapshot of the current entities to ensure deterministic behavior.
+4. Each alive **Actable** entity runs its `act(environment)` logic.
+5. Animals may sense, move, eat, and reproduce based on their state and strategies.
+6. Plants grow and attempt to reproduce in adjacent free cells.
+7. Dead entities (energy = 0) are removed from the environment at the end of the tick.
+8. The current map state and a population summary are printed to the console.
+
+---
+
+## 5. Package Guide
 
 | Package | Responsibility | Main files |
 | :--- | :--- | :--- |
-| `ecosystem.core` | ליבת המערכת וניהול העולם | `Position`, `Environment`, `SimulationEngine` |
-| `ecosystem.interfaces` | הגדרת חוזים והתנהגויות | `Actable`, `Consumable`, `Movable`, `Eater` |
-| `ecosystem.entities` | היררכיית הישויות הבסיסית | `AbstractEntity`, `LivingEntity`, `StaticEntity` |
-| `ecosystem.entities.animals` | מימושי חיות | `Animal`, `Lion`, `Deer`, `Rabbit` |
-| `ecosystem.entities.plants` | מימושי צמחים | `Plant`, `OakTree`, `Flower` |
-| `ecosystem.entities.resources` | מימושי משאבים סטטיים | `Resource`, `Rock`, `Water` |
-| `ecosystem.behaviors` | אסטרטגיות תנועה ותזונה | `MovementStrategy`, `FeedingBehavior` |
+| `ecosystem.core` | Core simulation logic and spatial management | `Position`, `Environment`, `SimulationEngine` |
+| `ecosystem.interfaces` | Behavioral contracts and capability markers | `Actable`, `Consumable`, `Movable`, `Eater` |
+| `ecosystem.entities` | Base entity hierarchy and state management | `AbstractEntity`, `LivingEntity`, `StaticEntity` |
+| `ecosystem.entities.animals` | Animal implementations | `Animal`, `Lion`, `Deer`, `Rabbit` |
+| `ecosystem.entities.plants` | Plant implementations | `Plant`, `OakTree`, `Flower` |
+| `ecosystem.entities.resources` | Static resource implementations | `Resource`, `Rock`, `Water` |
+| `ecosystem.behaviors` | Delegated strategy implementations | `MovementStrategy`, `FeedingBehavior` |
 
 ---
 
-## 6. Core Classes / מחלקות הליבה
+## 6. Core Classes
 
-- **Position**: שומרת קואורדינטות (row/col). מחשבת מרחק מנהטן (Manhattan Distance) ומוודאת שערכים שליליים לא מוזנים בבנאי.
-- **Environment**: מנהלת את גודל העולם ואת רשימת היצורים. בודקת מיקומים פנויים, מוסיפה/מסירה יצורים ומבצעת רינדור של המפה לטקסט.
-  - **חשוב**: המפה אינה נשמרת ככפל דו-ממדי (2D Array). במקום זאת, לכל יצור יש מיקום, וה-Environment מחזיק רשימה פשוטה של יצורים. המפה נוצרת בזמן אמת מהרשימה.
-- **SimulationEngine**: מנהל את הלופ המרכזי. דואג לסדר הפעולות בכל Tick, ניקוי יצורים מתים והדפסת פלט למשתמש.
+- **Position**: Represents row and column coordinates. Handles Manhattan distance calculations and validates that coordinates are non-negative.
+- **Environment**: Manages map dimensions and entity storage. Handles spatial queries (finding nearby entities, checking occupancy) and renders the map as a text grid.
+  - **Note**: The map is **not** stored as a 2D array. Instead, entities store their own `Position`, and the `Environment` maintains a `List<AbstractEntity>`. The grid is generated from this list during rendering.
+- **SimulationEngine**: Orchestrates the tick loop. Handles snapshot iteration, triggers entity actions, manages dead entity cleanup, and prints outputs.
 
 ---
 
-## 7. Entity Hierarchy / היררכיית הישויות
+## 7. Entity Hierarchy
 
 ```text
 AbstractEntity
-├── LivingEntity (has age/energy/maxEnergy)
-│   ├── Animal (acts using delegators)
+├── LivingEntity (manages age, energy, and life state)
+│   ├── Animal (delegates logic to movement/feeding strategies)
 │   │   ├── Lion
 │   │   ├── Deer
 │   │   └── Rabbit
-│   └── Plant (grows and reproduces)
+│   └── Plant (handles growth and reproduction)
 │       ├── OakTree
 │       └── Flower
 └── StaticEntity
-    └── Resource (static, no act)
+    └── Resource (non-acting, static environment elements)
         ├── Rock
         └── Water
 ```
 
 ---
 
-## 8. Interfaces / ממשקים
+## 8. Interfaces
 
 | Interface | Used by | Purpose |
 | :--- | :--- | :--- |
-| `Actable` | `LivingEntity` | מאפשר ליצור לבצע פעולה בכל Tick |
-| `Movable` | `Animal` | מאפשר ליצור לנוע במפה |
-| `Consumable` | Resources, Animals, Plants | מאפשר ליצור להיאכל/להיצרך |
-| `Eater` | `Animal` | מאפשר ליצור לצרוך `Consumable` |
-| `Reproducible` | Plants, Rabbit | מאפשר ליצור להתרבות |
-| `Sensory` | `Animal` | מאפשר ליצור לזהות יצורים סמוכים |
-| `EdibleByCarnivore` | Prey / Carnivores | מסמן יצור כאכיל עבור טורפים |
-| `EdibleByHerbivore` | Plants | מסמן יצור כאכיל עבור אוכלי עשב |
+| `Actable` | `LivingEntity` | Defines the entry point for per-tick logic |
+| `Movable` | `Animal` | Allows an entity to change its position |
+| `Consumable` | Resources, Entities | Allows an entity to be eaten/consumed for energy |
+| `Eater` | `Animal` | Allows an entity to consume `Consumable` targets |
+| `Reproducible` | Plants, Rabbit | Defines reproduction capabilities |
+| `Sensory` | `Animal` | Allows an entity to detect nearby entities |
+| `EdibleByCarnivore`| Prey / Carnivores | Marker for carnivore diet targets |
+| `EdibleByHerbivore` | Plants | Marker for herbivore diet targets |
 
 ---
 
-## 9. Behavior Delegators / האצלת סמכויות התנהגות
+## 9. Behavior Delegators
 
-החיות לא מכילות את כל לוגיקת התנועה והאכילה בתוכן. במקום זאת, הן משתמשות באובייקטי אסטרטגיה:
+Animals delegate their complex movement and feeding logic to strategy objects to ensure clean separation of concerns and avoid code duplication.
 
 ### MovementStrategy
 | Class | Behavior |
 | :--- | :--- |
-| `RandomMovement` | תנועה אקראית לתא פנוי סמוך |
-| `ChaseMovement` | רדיפה אחרי מזון מתאים (טורפים) |
-| `EscapeMovement` | בריחה מיצור מאיים סמוך |
+| `RandomMovement` | Moves randomly to a nearby adjacent free cell |
+| `ChaseMovement` | Targets and moves toward `EdibleByCarnivore` food |
+| `EscapeMovement` | Moves away from the nearest animal threat |
 
 ### FeedingBehavior
 | Class | Behavior |
 | :--- | :--- |
-| `CarnivoreBehavior` | אכילת יצורים מסוג `EdibleByCarnivore` |
-| `HerbivoreBehavior` | אכילת יצורים מסוג `EdibleByHerbivore` |
+| `CarnivoreBehavior` | Consumes `Consumable` + `EdibleByCarnivore` targets |
+| `HerbivoreBehavior` | Consumes `Consumable` + `EdibleByHerbivore` targets |
+
+**Note**: If no diet-specific food exists, behaviors may fall back to adjacent neutral `Consumable` resources such as `Water`.
 
 ---
 
-## 10. Entity Symbols / סמלי היצורים
+## 10. Entity Symbols
 
 | Entity | Symbol | Entity | Symbol |
 | :--- | :--- | :--- | :--- |
@@ -147,64 +148,69 @@ AbstractEntity
 
 ---
 
-## 11. Where to Change What / מדריך לשינויים בקוד
+## 11. Where to Change What
 
-| אם ברצונך לשנות... | ערוך את הקובץ/חבילה הבאים |
+| If you want to change... | Edit this file/package |
 | :--- | :--- |
-| גודל מפה / אחסון יצורים | `Environment` |
-| לוגיקת הסימולציה וסיכומי ה-Tick | `SimulationEngine` |
-| התנהגות בסיסית של חיות | `Animal` |
-| התנהגות אריה (תנועה/אכילה) | `Lion` + `ChaseMovement` + `CarnivoreBehavior` |
-| התנהגות צבי / ארנב | `Deer` / `Rabbit` + אסטרטגיות מתאימות |
-| התרבות ארנבים | `Rabbit.reproduce()` |
-| קצב גדילה של צמחים | `Plant` |
-| התרבות עץ אלון / פרח | `OakTree` / `Flower` |
-| חוקי תנועה כלליים | חבילת `ecosystem.behaviors` (מחלקות התנועה) |
-| חוקי אכילה כלליים | חבילת `ecosystem.behaviors` (מחלקות האכילה) |
-| סמלי היצורים | בנאים (Constructors) של הישויות הספציפיות |
+| Map size or entity storage | `Environment` |
+| Tick flow or output summary | `SimulationEngine` |
+| Base animal behavior | `Animal` |
+| Lion movement/eating | `Lion`, `ChaseMovement`, `CarnivoreBehavior` |
+| Deer behavior | `Deer`, `EscapeMovement`, `HerbivoreBehavior` |
+| Rabbit reproduction | `Rabbit` |
+| Plant growth logic | `Plant` |
+| OakTree reproduction | `OakTree` |
+| Flower reproduction | `Flower` |
+| Movement rules | `ecosystem.behaviors` movement classes |
+| Feeding rules | `ecosystem.behaviors` feeding classes |
+| Entity symbols | Concrete entity constructors |
 
 ---
 
-## 12. Validation Commands / פקודות אימות
-
-לפני הגשה, וודא שהקוד תקין בעזרת הפקודות הבאות:
+## 12. Validation Commands
 
 ### Static Checks (PowerShell)
-בדוק שאין שדות `public` או `protected` ושהשימוש ב-`instanceof` מוצדק:
+Run these commands to verify encapsulation and assignment compliance:
 ```powershell
+# Check for public/protected fields (encapsulation)
 Get-ChildItem -Recurse src -Filter *.java | Select-String -Pattern "public\s+.*\s*;"
 Get-ChildItem -Recurse src -Filter *.java | Select-String -Pattern "protected\s+.*\s*;"
+
+# Review type usage and polymorphism
 Get-ChildItem -Recurse src -Filter *.java | Select-String -Pattern "instanceof"
+
+# Review method return types
 Get-ChildItem -Recurse src -Filter *.java | Select-String -Pattern "void\s+"
 ```
 
 ---
 
-## 13. Design Decisions / החלטות עיצוב
+## 13. Design Decisions
 
-- **List-based map storage**: העולם מנוהל כרשימה (`List`) ולא כמערך דו-ממדי כדי לפשט את הניהול הדינמי של היצורים ולמנוע בעיות סנכרון בין הרשימה למטריצה.
-- **Plant vs Planet**: נעשה שימוש ב-`Plant` כפי שנדרש במבנה החבילות, למרות טעויות כתיב אפשריות בהוראות המטלה.
-- **Randomness**: התנועה וההתרבות משתמשות ב-`Random`, לכן הפלט עשוי להשתנות בין ריצות שונות.
+- **List-based map storage**: `Environment` uses a `List<AbstractEntity>` instead of a 2D array. This simplifies dynamic management, movement logic, and avoids synchronization overhead between lists and matrices.
+- **Plant vs Planet**: Used `Plant` as the canonical name (per package requirements), treating "Planet" in the assignment text as a typo.
+- **Consumable vs Consumer**: Implemented the `Consumable` interface as per the required structural specifications.
+- **Randomness**: Movement and reproduction utilize `java.util.Random`, so simulation outputs will naturally vary between runs.
 
 ---
 
-## 14. Do Not Commit / קבצים שאין להוסיף ל-Git
+## 14. Do Not Commit
 
-הקבצים הבאים הם קבצים זמניים או תוצרי קומפילציה ואין להעלותם למאגר המרכזי:
+The following files are local or generated artifacts and should not be tracked in the repository:
 - `sources.txt`
-- `out/` (תיקיית הפלט)
+- `out/`
 - `*.class`
-- `antigravity_assignment2_split_pack/` (תיקיית ההוראות)
+- `antigravity_assignment2_split_pack/`
 
 ---
 
-## 15. Recommended Reading Order / סדר קריאה מומלץ
+## 15. Recommended Reading Order
 
-כדי להבין את הפרויקט במהירות, מומלץ לעבור על הקבצים בסדר הבא:
+To understand the project flow, read files in the following order:
 1. `Position` -> `Environment`
 2. `AbstractEntity` -> `LivingEntity` -> `StaticEntity`
-3. `Resource` / `Rock` / `Water`
-4. `Plant` / `OakTree` / `Flower`
-5. `Animal` / `Lion` / `Deer` / `Rabbit`
-6. `MovementStrategy` / `FeedingBehavior` -> מימושים קונקרטיים
+3. `Resource`, `Rock`, `Water`
+4. `Plant`, `OakTree`, `Flower`
+5. `Animal`, `Lion`, `Deer`, `Rabbit`
+6. `MovementStrategy`, `FeedingBehavior` and their concrete implementations
 7. `SimulationEngine`
