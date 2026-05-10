@@ -1,4 +1,7 @@
 package ecosystem.interfaces;
 
-public interface EdibleByCarnivore extends Consumable {
+/**
+ * Marker interface for entities that can be eaten by carnivores.
+ */
+public interface EdibleByCarnivore {
 }

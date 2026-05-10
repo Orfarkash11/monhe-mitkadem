@@ -1,50 +1,90 @@
 package ecosystem.entities.animals;
 
+import ecosystem.behaviors.HerbivoreBehavior;
+import ecosystem.behaviors.RandomMovement;
 import ecosystem.core.Environment;
 import ecosystem.core.Position;
-import ecosystem.behaviors.RandomMovement;
-import ecosystem.behaviors.HerbivoreBehavior;
 import ecosystem.interfaces.Reproducible;
+import java.util.Random;
 
+/**
+ * Small herbivore that reproduces quickly.
+ */
 public class Rabbit extends Animal implements Reproducible {
+    private static final Random random = new Random();
 
+    /**
+     * Constructs a Rabbit at the given position.
+     * @param position initial position.
+     * @param environment environment reference (not used in constructor).
+     */
     public Rabbit(Position position, Environment environment) {
-        super(position, environment);
-        setEnergy(50);
-        setSymbol('R');
-        setMovementStrategy(new RandomMovement());
-        setFeedingBehavior(new HerbivoreBehavior());
+        super(position, 'R', 50, 80, new RandomMovement(), new HerbivoreBehavior());
     }
 
+    /**
+     * Rabbit specific action: standard animal behavior + reproduction.
+     * @param env the environment.
+     * @return true if cycle completed.
+     */
     @Override
     public boolean act(Environment env) {
         if (!super.act(env)) {
             return false;
         }
-
-        if (this.getEnergy() >= 30 && Math.random() <= 0.3) {
-            this.reproduce(env);
+        
+        // Reproduction attempt after eating
+        if (isAlive()) {
+            reproduce(env);
         }
-
+        
         return true;
     }
 
+    /**
+     * Attempts to reproduce in a free adjacent cell if energy > 30.
+     * @param env the environment.
+     * @return true if a new rabbit was added.
+     */
     @Override
     public boolean reproduce(Environment env) {
+        if (getEnergy() <= 30 || random.nextDouble() > 0.3) {
+            return false;
+        }
+
+        Position current = getPosition();
+        if (current == null) return false;
+
+        int[][] directions = {
+            {-1, -1}, {-1, 0}, {-1, 1},
+            {0, -1},           {0, 1},
+            {1, -1},  {1, 0},  {1, 1}
+        };
+
+        for (int[] dir : directions) {
+            Position target = new Position(current.getRow() + dir[0], current.getCol() + dir[1]);
+            if (env.isInsideBounds(target) && env.isPositionFree(target)) {
+                Rabbit child = new Rabbit(target, env);
+                return env.addEntity(child);
+            }
+        }
+
         return false;
     }
 
+    /**
+     * Checks equality based on superclass fields.
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o != null && this.getClass() == o.getClass()) {
-            return this.toString().equals(o.toString());
-        }
-        return false;
+        return super.equals(o);
     }
 
+    /**
+     * Uses superclass toString.
+     */
     @Override
     public String toString() {
-        return "Rabbit " + getPosition() + " " + getEnergy() + " " + isAlive();
+        return super.toString();
     }
 }

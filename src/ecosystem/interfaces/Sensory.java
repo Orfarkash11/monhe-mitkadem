@@ -4,6 +4,14 @@ import ecosystem.entities.AbstractEntity;
 
 import java.util.List;
 
+/**
+ * Interface for entities that can sense their surroundings.
+ */
 public interface Sensory {
-    List<AbstractEntity> sense (Environment env);
+    /**
+     * Senses nearby entities in the environment.
+     * @param env the environment to sense.
+     * @return a list of detected entities.
+     */
+    List<AbstractEntity> sense(Environment env);
 }

@@ -1,31 +1,34 @@
 package ecosystem.entities.animals;
 
-import ecosystem.core.Environment;
-import ecosystem.core.Position;
-import ecosystem.behaviors.ChaseMovement;
 import ecosystem.behaviors.CarnivoreBehavior;
+import ecosystem.behaviors.ChaseMovement;
+import ecosystem.core.Position;
 
+/**
+ * Top-tier predator that chases prey.
+ */
 public class Lion extends Animal {
+    /**
+     * Constructs a Lion at the given position.
+     * @param position initial position.
+     */
     public Lion(Position position) {
-        super(position);
-        setEnergy(100);
-        setSymbol('L');
-        setMovementStrategy(new ChaseMovement());
-        setFeedingBehavior(new CarnivoreBehavior());
+        super(position, 'L', 100, 150, new ChaseMovement(), new CarnivoreBehavior());
     }
 
+    /**
+     * Checks equality based on superclass fields.
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o != null && this.getClass() == o.getClass()) {
-            return this.toString().equals(o.toString());
-        }
-        return false;
+        return super.equals(o);
     }
 
+    /**
+     * Uses superclass toString.
+     */
     @Override
     public String toString() {
-        return "Lion " + getPosition() + " " + getEnergy() + " " + isAlive();
+        return super.toString();
     }
 }
-
