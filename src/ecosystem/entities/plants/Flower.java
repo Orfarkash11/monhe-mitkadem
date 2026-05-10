@@ -1,6 +1,5 @@
 package ecosystem.entities.plants;
 
-import ecosystem.interfaces.Reproducible;
 
 import ecosystem.core.Environment;
 import ecosystem.core.Position;
