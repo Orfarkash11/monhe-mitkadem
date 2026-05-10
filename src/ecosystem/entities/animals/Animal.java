@@ -9,67 +9,116 @@ import ecosystem.entities.LivingEntity;
 import ecosystem.interfaces.*;
 import java.util.List;
 
-public abstract class Animal extends LivingEntity implements EdibleByCarnivore, Movable, Eater, Sensory {
+/**
+ * Base class for all animals in the ecosystem.
+ * Animals move, sense surroundings, and eat other entities.
+ */
+public abstract class Animal extends LivingEntity implements EdibleByCarnivore, Movable, Eater, Sensory, Consumable {
     private int visionRange = 2;
     private MovementStrategy movementStrategy;
     private FeedingBehavior feedingBehavior;
 
+    /**
+     * Constructs an Animal.
+     * @param position initial position.
+     * @param symbol character representation.
+     * @param energy initial energy.
+     * @param maxEnergy maximum energy.
+     * @param movementStrategy strategy for moving.
+     * @param feedingBehavior strategy for eating.
+     */
     public Animal(Position position, char symbol, int energy, int maxEnergy,
                   MovementStrategy movementStrategy, FeedingBehavior feedingBehavior) {
-        super();
+        super(position, symbol, energy, maxEnergy, null);
+        this.movementStrategy = movementStrategy;
+        this.feedingBehavior = feedingBehavior;
     }
 
-    protected boolean setMovementStrategy(MovementStrategy ms) {
-        this.movementStrategy = ms;
-        return true;
-    }
-
-    protected boolean setFeedingBehavior(FeedingBehavior fb) {
-        this.feedingBehavior = fb;
-        return true;
-    }
-
+    /**
+     * @return 80% of current energy as nutrition.
+     */
     @Override
     public int getNutritionValue() {
-        return (int) (this.getEnergy() * 0.8);
+        return (int) (getEnergy() * 0.8);
     }
 
+    /**
+     * Sets the animal to dead when consumed.
+     * @return true always.
+     */
     @Override
     public boolean onConsumed() {
-        this.setAlive(false);
-        return true;
+        return setAlive(false);
     }
 
+    /**
+     * Senses nearby entities in the environment.
+     * @param env the environment.
+     * @return list of detected entities.
+     */
     @Override
     public List<AbstractEntity> sense(Environment env) {
-        return env.getNearbyEntities(this.getPosition());
+        if (env == null) return new java.util.ArrayList<>();
+        return env.getNearbyEntities(getPosition());
     }
 
+    /**
+     * Delegates movement to the movement strategy.
+     * @param env the environment.
+     * @return true if moved successfully.
+     */
     @Override
     public boolean move(Environment env) {
-        return this.movementStrategy.Move(this, env);
-    }
-
-    @Override
-    public boolean eat(Consumable target) {
-        if (target != null) {
-            this.setEnergy(this.getEnergy() + target.getNutritionValue());
-            target.onConsumed();
-            return true;
+        if (movementStrategy != null) {
+            return movementStrategy.move(this, env);
         }
         return false;
     }
 
+    /**
+     * Consumes a target, gaining energy up to maxEnergy.
+     * @param target the consumable to eat.
+     * @return true if target was consumed.
+     */
+    @Override
+    public boolean eat(Consumable target) {
+        if (target == null) return false;
+        
+        int nutrition = target.getNutritionValue();
+        setEnergy(getEnergy() + nutrition); // setEnergy handles capping at maxEnergy in LivingEntity
+        return target.onConsumed();
+    }
+
+    /**
+     * Performs the animal's action cycle: age, move, eat.
+     * @param env the environment.
+     * @return true if the cycle completed (even if move/eat failed).
+     */
     @Override
     public boolean act(Environment env) {
+        // 1. Biological update
         if (!super.act(env)) {
             return false;
         }
 
-        List<AbstractEntity> nearby = this.sense(env);
-        this.move(env);
-        this.feedingBehavior.eat(this, nearby);
+        // 2. Sense
+        List<AbstractEntity> nearby = sense(env);
+
+        // 3. Move
+        move(env);
+
+        // 4. Eat
+        if (feedingBehavior != null) {
+            feedingBehavior.eat(this, nearby);
+        }
 
         return true;
+    }
+
+    /**
+     * @return the current vision range.
+     */
+    protected int getVisionRange() {
+        return visionRange;
     }
 }

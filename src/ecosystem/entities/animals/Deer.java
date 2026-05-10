@@ -1,30 +1,44 @@
 package ecosystem.entities.animals;
 
-import ecosystem.core.Environment;
-import ecosystem.core.Position;
 import ecosystem.behaviors.EscapeMovement;
 import ecosystem.behaviors.HerbivoreBehavior;
+import ecosystem.core.Environment;
+import ecosystem.core.Position;
 
+/**
+ * Large herbivore that escapes from threats.
+ */
 public class Deer extends Animal {
-    public Deer(Position position, Environment environment) {
-        super(position, environment);
-        setEnergy(70);
-        setSymbol('D');
-        setMovementStrategy(new EscapeMovement());
-        setFeedingBehavior(new HerbivoreBehavior());
+    /**
+     * Convenience constructor for automatic testing.
+     * @param position initial position.
+     */
+    public Deer(Position position) {
+        this(position, null);
     }
 
+    /**
+     * Constructs a Deer at the given position.
+     * @param position initial position.
+     * @param environment environment reference (not used in constructor but part of original stub).
+     */
+    public Deer(Position position, Environment environment) {
+        super(position, 'D', 70, 100, new EscapeMovement(), new HerbivoreBehavior());
+    }
+
+    /**
+     * Checks equality based on superclass fields.
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o != null && this.getClass() == o.getClass()) {
-            return this.toString().equals(o.toString());
-        }
-        return false;
+        return super.equals(o);
     }
 
+    /**
+     * Uses superclass toString.
+     */
     @Override
     public String toString() {
-        return "Deer " + getPosition() + " " + getEnergy() + " " + isAlive();
+        return super.toString();
     }
 }
