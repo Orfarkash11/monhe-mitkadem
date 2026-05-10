@@ -12,11 +12,10 @@ public class RandomMovement implements MovementStrategy {
     private static final Random random = new Random();
 
     /**
-     * Moves the animal to a random adjacent free position.
-     * @param entity the animal to move.
-     * @param env the environment.
-     * @return true if moved successfully.
+     * Constructs a RandomMovement strategy.
      */
+    public RandomMovement() {}
+
     @Override
     public boolean move(Animal entity, Environment env) {
         Position current = entity.getPosition();
@@ -25,13 +24,13 @@ public class RandomMovement implements MovementStrategy {
         int row = current.getRow();
         int col = current.getCol();
 
-        // 8 possible adjacent directions
         int[][] directions = {
             {-1, -1}, {-1, 0}, {-1, 1},
             {0, -1},           {0, 1},
             {1, -1},  {1, 0},  {1, 1}
         };
-        
+
+        // Try directions in random order
         int startIdx = random.nextInt(directions.length);
         for (int i = 0; i < directions.length; i++) {
             int[] dir = directions[(startIdx + i) % directions.length];
@@ -46,5 +45,21 @@ public class RandomMovement implements MovementStrategy {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks equality based on class type.
+     */
+    @Override
+    public boolean equals(Object o) {
+        return o != null && getClass() == o.getClass();
+    }
+
+    /**
+     * Returns class name as string.
+     */
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
     }
 }

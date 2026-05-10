@@ -10,6 +10,11 @@ import java.util.List;
  * Strategy for moving away from the nearest threat.
  */
 public class EscapeMovement implements MovementStrategy {
+    /**
+     * Constructs an EscapeMovement strategy.
+     */
+    public EscapeMovement() {}
+
     @Override
     public boolean move(Animal entity, Environment env) {
         Position current = entity.getPosition();
@@ -19,7 +24,7 @@ public class EscapeMovement implements MovementStrategy {
         AbstractEntity threat = null;
         int minDist = Integer.MAX_VALUE;
 
-        // Find nearest threat (any other animal)
+        // Find nearest other animal as a threat
         for (AbstractEntity e : nearby) {
             if (e.isAlive() && e instanceof Animal && e != entity) {
                 int dist = current.distanceTo(e.getPosition());
@@ -61,5 +66,21 @@ public class EscapeMovement implements MovementStrategy {
         }
 
         return false;
+    }
+
+    /**
+     * Checks equality based on class type.
+     */
+    @Override
+    public boolean equals(Object o) {
+        return o != null && getClass() == o.getClass();
+    }
+
+    /**
+     * Returns class name as string.
+     */
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
     }
 }

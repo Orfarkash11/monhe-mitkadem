@@ -93,6 +93,25 @@ public class SimulationEngine {
     }
 
     /**
+     * Checks equality based on the environment.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimulationEngine that = (SimulationEngine) o;
+        return environment != null ? environment.equals(that.environment) : that.environment == null;
+    }
+
+    /**
+     * Returns a string representation of the engine.
+     */
+    @Override
+    public String toString() {
+        return "SimulationEngine environment=" + environment;
+    }
+
+    /**
      * Minimal demo entry point to verify simulation logic.
      * @param args command line arguments.
      */
@@ -100,13 +119,18 @@ public class SimulationEngine {
         Environment env = new Environment(15, 15);
         SimulationEngine engine = new SimulationEngine(env);
 
-        // Simple demo population setup
+        // Simple demo population setup (Minimum 3 of each category)
+        // Resources: Rock, Water, Rock
         env.addEntity(new ecosystem.entities.resources.Rock(new Position(0, 0)));
         env.addEntity(new ecosystem.entities.resources.Water(new Position(1, 1)));
+        env.addEntity(new ecosystem.entities.resources.Rock(new Position(14, 14)));
         
+        // Plants: OakTree, Flower, Flower
         env.addEntity(new ecosystem.entities.plants.OakTree(new Position(5, 5)));
         env.addEntity(new ecosystem.entities.plants.Flower(new Position(2, 8)));
+        env.addEntity(new ecosystem.entities.plants.Flower(new Position(10, 2)));
         
+        // Animals: Rabbit, Deer, Lion
         env.addEntity(new ecosystem.entities.animals.Rabbit(new Position(7, 7), env));
         env.addEntity(new ecosystem.entities.animals.Deer(new Position(3, 3), env));
         env.addEntity(new ecosystem.entities.animals.Lion(new Position(12, 12)));

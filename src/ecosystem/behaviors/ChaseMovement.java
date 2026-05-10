@@ -13,6 +13,11 @@ import java.util.List;
  * Strategy for moving toward the nearest edible target.
  */
 public class ChaseMovement implements MovementStrategy {
+    /**
+     * Constructs a ChaseMovement strategy.
+     */
+    public ChaseMovement() {}
+
     @Override
     public boolean move(Animal entity, Environment env) {
         Position current = entity.getPosition();
@@ -74,5 +79,21 @@ public class ChaseMovement implements MovementStrategy {
         }
 
         return false;
+    }
+
+    /**
+     * Checks equality based on class type.
+     */
+    @Override
+    public boolean equals(Object o) {
+        return o != null && getClass() == o.getClass();
+    }
+
+    /**
+     * Returns class name as string.
+     */
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
     }
 }
