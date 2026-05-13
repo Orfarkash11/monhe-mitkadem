@@ -5,6 +5,8 @@ import ecosystem.core.Position;
 import ecosystem.interfaces.Actable;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Base class for entities that have biological needs and age over time.
  */
 public abstract class LivingEntity extends AbstractEntity implements Actable {

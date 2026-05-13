@@ -8,6 +8,8 @@ import ecosystem.interfaces.EdibleByHerbivore;
 import ecosystem.interfaces.Reproducible;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Base class for all plant life in the ecosystem.
  * Plants grow and reproduce without consuming other entities.
  */

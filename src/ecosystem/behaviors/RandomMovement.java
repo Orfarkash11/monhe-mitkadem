@@ -6,6 +6,8 @@ import ecosystem.entities.animals.Animal;
 import java.util.Random;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Strategy for moving to a random adjacent free cell.
  */
 public class RandomMovement implements MovementStrategy {

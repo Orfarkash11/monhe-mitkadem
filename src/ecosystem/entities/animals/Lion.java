@@ -5,6 +5,8 @@ import ecosystem.behaviors.ChaseMovement;
 import ecosystem.core.Position;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Top-tier predator that chases prey.
  */
 public class Lion extends Animal {

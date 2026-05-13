@@ -1,6 +1,7 @@
 package ecosystem.core;
-
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Represents a 2D coordinate (row, col) in the ecosystem grid.
  * This is a value object used to track entity locations.
  */

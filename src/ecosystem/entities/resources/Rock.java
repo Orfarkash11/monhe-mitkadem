@@ -3,6 +3,8 @@ package ecosystem.entities.resources;
 import ecosystem.core.Position;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Represents a solid obstacle in the environment.
  */
 public class Rock extends Resource {

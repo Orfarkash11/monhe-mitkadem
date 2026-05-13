@@ -1,6 +1,8 @@
 package ecosystem.interfaces;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Interface for entities that can eat consumables.
  */
 public interface Eater {

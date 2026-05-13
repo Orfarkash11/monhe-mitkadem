@@ -4,6 +4,8 @@ import ecosystem.core.Position;
 import ecosystem.entities.StaticEntity;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Abstract base class for all environmental resources.
  */
 public abstract class Resource extends StaticEntity {

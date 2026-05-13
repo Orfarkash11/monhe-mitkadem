@@ -6,6 +6,8 @@ import ecosystem.core.Environment;
 import ecosystem.core.Position;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Large herbivore that escapes from threats.
  */
 public class Deer extends Animal {

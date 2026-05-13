@@ -3,6 +3,8 @@ package ecosystem.entities;
 import ecosystem.core.Position;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Base class for all entities in the ecosystem.
  */
 public abstract class AbstractEntity {

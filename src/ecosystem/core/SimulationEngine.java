@@ -5,8 +5,9 @@ import ecosystem.entities.animals.Animal;
 import ecosystem.entities.plants.Plant;
 import ecosystem.interfaces.Actable;
 import java.util.List;
-
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Orchestrates the simulation by advancing time in discrete steps (ticks).
  */
 public class SimulationEngine {

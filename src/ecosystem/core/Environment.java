@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Manages the ecosystem's spatial layout and entity population.
  */
 public class Environment {

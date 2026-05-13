@@ -6,6 +6,8 @@ import ecosystem.core.Position;
 import java.util.Random;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Represents a fast-growing plant that reproduces in clusters.
  */
 public class Flower extends Plant {

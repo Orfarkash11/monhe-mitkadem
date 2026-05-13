@@ -10,6 +10,8 @@ import ecosystem.interfaces.*;
 import java.util.List;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Base class for all animals in the ecosystem.
  * Animals move, sense surroundings, and eat other entities.
  */

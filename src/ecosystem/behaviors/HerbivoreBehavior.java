@@ -8,6 +8,8 @@ import ecosystem.interfaces.EdibleByHerbivore;
 import java.util.List;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Feeding behavior for herbivores.
  */
 public class HerbivoreBehavior implements FeedingBehavior {

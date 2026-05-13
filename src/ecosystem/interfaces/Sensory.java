@@ -5,6 +5,8 @@ import ecosystem.entities.AbstractEntity;
 import java.util.List;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Interface for entities that can sense their surroundings.
  */
 public interface Sensory {

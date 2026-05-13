@@ -7,6 +7,8 @@ import ecosystem.entities.animals.Animal;
 import java.util.List;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Strategy for moving away from the nearest threat.
  */
 public class EscapeMovement implements MovementStrategy {

@@ -8,6 +8,8 @@ import ecosystem.interfaces.Reproducible;
 import java.util.Random;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Small herbivore that reproduces quickly.
  */
 public class Rabbit extends Animal implements Reproducible {

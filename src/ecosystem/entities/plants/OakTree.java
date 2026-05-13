@@ -5,6 +5,8 @@ import ecosystem.core.Position;
 import java.util.Random;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Represents a slow-growing, long-lived tree.
  */
 public class OakTree extends Plant {

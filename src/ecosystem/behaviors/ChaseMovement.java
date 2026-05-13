@@ -10,6 +10,8 @@ import ecosystem.interfaces.EdibleByHerbivore;
 import java.util.List;
 
 /**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  * Strategy for moving toward the nearest edible target.
  */
 public class ChaseMovement implements MovementStrategy {
