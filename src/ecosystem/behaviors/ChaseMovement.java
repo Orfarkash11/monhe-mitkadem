@@ -13,6 +13,8 @@ import java.util.List;
  * Or Farkash 314920984
  * Oleg Magit 312544752
  * Strategy for moving toward the nearest edible target.
+ * Chases nearby edible prey within sensing range.
+ * If no prey is nearby, it performs random movement so predators do not stay frozen.
  */
 public class ChaseMovement implements MovementStrategy {
     /**
@@ -44,7 +46,10 @@ public class ChaseMovement implements MovementStrategy {
             }
         }
 
-        if (target == null) return false;
+        // If no target is found in sensing range, wander randomly
+        if (target == null) {
+            return new RandomMovement().move(entity, env);
+        }
 
         Position targetPos = target.getPosition();
         int dr = Integer.compare(targetPos.getRow(), current.getRow());
