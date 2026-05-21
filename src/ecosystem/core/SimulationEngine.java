@@ -1,5 +1,8 @@
 package ecosystem.core;
-
+import ecosystem.gui.observer.SimulationObserver;
+import ecosystem.gui.observer.SimulationEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import ecosystem.entities.AbstractEntity;
 import ecosystem.entities.animals.Animal;
 import ecosystem.entities.plants.Plant;
@@ -11,6 +14,11 @@ import java.util.List;
  * Orchestrates the simulation by advancing time in discrete steps (ticks).
  */
 public class SimulationEngine {
+    private final List<SimulationObserver> observers =
+            Collections.synchronizedList(new ArrayList<>());
+
+    /** Running count of completed ticks; reset to 0 on reset(). */
+    private int tickCount = 0;
     private Environment environment;
 
     /**
@@ -58,6 +66,8 @@ public class SimulationEngine {
 
         // 5. Print summary counts
         printSummary();
+        tickCount++;
+        notifyObservers();
     }
 
     /**
@@ -141,4 +151,54 @@ public class SimulationEngine {
             engine.tick();
         }
     }
+    /**
+     * Registers an observer that will be notified after every state change.
+     *
+     * @param observer the observer to register; ignored if {@code null}
+     */
+    public void addObserver(SimulationObserver observer) {
+        if (observer != null) {
+            observers.add(observer);
+        }
+    }
+
+    /**
+     * Removes a previously registered observer.
+     *
+     * @param observer the observer to remove
+     */
+    public void removeObserver(SimulationObserver observer) {
+        observers.remove(observer);
+    }
+
+    /**
+     * Notifies all registered observers with the current simulation state.
+     * Called internally at the end of every tick and after a reset.
+     */
+    private void notifyObservers() {
+        SimulationEvent event = new SimulationEvent(tickCount, environment);
+        // Iterate over a snapshot to avoid ConcurrentModificationException
+        List<SimulationObserver> snapshot;
+        synchronized (observers) {
+            snapshot = new ArrayList<>(observers);
+        }
+        for (SimulationObserver obs : snapshot) {
+            obs.onSimulationUpdated(event);
+        }
+    }
+
+    /**
+     * Returns the total number of ticks completed since the last reset.
+     *
+     * @return tick count
+     */
+    public int getTickCount() {
+        return tickCount;
+    }
+
+    public void reset() {
+        tickCount = 0;
+        notifyObservers();
+    }
+
 }
