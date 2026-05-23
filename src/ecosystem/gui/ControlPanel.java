@@ -9,21 +9,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Button bar — the Controller in MVC terms.
- *
- * <p>Handles:
- * <ul>
- *   <li>Single Tick, Continuous Run, Stop, Reset</li>
- *   <li>Add Entity (opens {@link AddEntityDialog})</li>
- *   <li>Speed slider for continuous run</li>
- * </ul>
- * </p>
- *
- * <h3>Concurrency strategy</h3>
- * <p>Continuous run uses a daemon {@link Thread} that loops and calls
- * {@link SimulationEngine#tick()}.  The model's {@code notifyObservers()}
- * dispatches to {@code SwingUtilities.invokeLater} so the EDT is never
- * touched from the background thread.</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public class ControlPanel extends JPanel {
 

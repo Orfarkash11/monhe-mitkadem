@@ -12,11 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Real-time statistics panel showing tick count, total system energy,
- * and per-type entity counts.
- *
- * <p>All updates must happen on the EDT; callers are responsible for
- * dispatching through {@code SwingUtilities.invokeLater}.</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public class StatsPanel extends JPanel {
 

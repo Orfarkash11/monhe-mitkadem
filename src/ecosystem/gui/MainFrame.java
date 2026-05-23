@@ -9,20 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Root application window (the View in MVC terms).
- *
- * <p>Layout:
- * <pre>
- *  ┌──────────────────────────────────────────────────────┐
- *  │  MapPanel (CENTER)    │  InfoPanel   (EAST, top)     │
- *  │                       │  StatsPanel  (EAST, middle)  │
- *  │                       │  ControlPanel(EAST, bottom)  │
- *  └──────────────────────────────────────────────────────┘
- * </pre>
- * </p>
- *
- * <p>Implements {@link SimulationObserver} so it can fan out update events
- * to its child panels.</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public class MainFrame extends JFrame implements SimulationObserver {
 

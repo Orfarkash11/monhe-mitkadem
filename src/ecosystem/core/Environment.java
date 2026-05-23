@@ -15,7 +15,8 @@ public class Environment {
     private List<AbstractEntity> entities;
 
     /**
-     * Constructs a default 10x10 environment.
+     * Or Farkash 314920984
+     * Oleg Magit 312544752
      */
     public Environment() {
         this(10, 10);

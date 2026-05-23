@@ -2,34 +2,27 @@ package ecosystem.gui;
 
 import ecosystem.core.Environment;
 import ecosystem.core.Position;
-import ecosystem.entities.AbstractEntity;
-import ecosystem.gui.observer.SimulationObserver;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Displays the simulation grid as a 2-D matrix of icon-bearing cells.
- *
- * <p>Responsibilities:
- * <ul>
- *   <li>Render one {@link ImageManager.EntityType} icon per cell</li>
- *   <li>Show a tooltip with the entity's {@code toString()} on hover</li>
- *   <li>Highlight the clicked cell and push entity details to {@link InfoPanel}</li>
- * </ul>
- * </p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public class MapPanel extends JPanel {
 
     private static final Color COLOR_HIGHLIGHT = new Color(255, 215, 0, 120); // translucent gold
-    private static final Color COLOR_GRID      = new Color(200, 200, 200);
+    private static final Color COLOR_GRID = new Color(200, 200, 200);
 
-    private final int        cellSize;
-    private final InfoPanel  infoPanel;
-    private       Environment environment;
+    private final int cellSize;
+    private final InfoPanel infoPanel;
+    private Environment environment;
 
-    /** Currently selected cell, or {@code null} when nothing is selected. */
+    /**
+     * Currently selected cell, or {@code null} when nothing is selected.
+     */
     private Position selectedCell = null;
 
     /**
@@ -41,8 +34,8 @@ public class MapPanel extends JPanel {
      */
     public MapPanel(Environment environment, int cellSize, InfoPanel infoPanel) {
         this.environment = environment;
-        this.cellSize    = cellSize;
-        this.infoPanel   = infoPanel;
+        this.cellSize = cellSize;
+        this.infoPanel = infoPanel;
 
         int cols = environment.getCols();
         int rows = environment.getRows();
@@ -114,8 +107,8 @@ public class MapPanel extends JPanel {
                 g2.fillRect(px, py, cellSize, cellSize);
 
                 // Icon
-                Position pos    = new Position(col, row);
-                Object   entity = getEntityAt(pos);
+                Position pos = new Position(col, row);
+                Object entity = getEntityAt(pos);
                 ImageManager.EntityType type = imgMgr.resolveType(entity);
                 ImageIcon icon = imgMgr.getIcon(type);
                 g2.drawImage(icon.getImage(), px, py, cellSize, cellSize, this);
@@ -145,7 +138,7 @@ public class MapPanel extends JPanel {
      * @return clamped grid position
      */
     private Position pixelToPosition(int px, int py) {
-        int col = Math.min(px / cellSize, environment.getCols()  - 1);
+        int col = Math.min(px / cellSize, environment.getCols() - 1);
         int row = Math.min(py / cellSize, environment.getRows() - 1);
         return new Position(col, row);
     }

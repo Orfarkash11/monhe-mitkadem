@@ -16,14 +16,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Modal dialog for adding a new entity to the simulation at runtime.
- *
- * <p>The user selects the entity type, specifies a grid position (X, Y),
- * and optionally sets an initial energy value. All inputs are validated with
- * user-friendly {@link JOptionPane} error messages — the app never crashes.</p>
- *
- * <p>Check {@link #wasConfirmed()} after {@code setVisible(true)} returns
- * to know whether the user submitted a valid entity.</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public class AddEntityDialog extends JDialog {
 

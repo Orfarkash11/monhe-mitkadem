@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
- * Feeding behavior for carnivores.
  */
 public class CarnivoreBehavior implements FeedingBehavior {
     /**

@@ -7,10 +7,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 /**
- * Side panel showing the full details of the currently selected entity.
- *
- * <p>Displays entity type, position, and the full output of the entity's
- * {@code toString()} method in a scrollable text area.</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public class InfoPanel extends JPanel {
 

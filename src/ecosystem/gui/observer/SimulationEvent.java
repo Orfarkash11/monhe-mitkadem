@@ -1,7 +1,10 @@
 package ecosystem.gui.observer;
 
 import ecosystem.core.Environment;
-
+/**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
+ */
 public final class SimulationEvent {
     /** Total number of ticks elapsed since simulation start or last reset. */
     private final int tickCount;

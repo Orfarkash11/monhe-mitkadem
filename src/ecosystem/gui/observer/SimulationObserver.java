@@ -1,15 +1,8 @@
 package ecosystem.gui.observer;
 
 /**
- * Observer interface for the Simulation MVC pattern.
- *
- * <p>Any GUI component that needs to react to model state changes
- * must implement this interface and register itself with the
- * {@link ecosystem.core.SimulationEngine}.</p>
- *
- * <p>All methods on concrete implementations MUST be called via
- * {@code SwingUtilities.invokeLater} when triggered from a background
- * thread to remain thread-safe.</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public interface SimulationObserver {
 

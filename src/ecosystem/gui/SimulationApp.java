@@ -4,12 +4,9 @@ import ecosystem.core.Environment;
 import ecosystem.core.SimulationEngine;
 
 import javax.swing.*;
-
 /**
- * Application entry point.
- *
- * <p>Bootstraps the model, then hands off to the EDT for all GUI
- * construction (Swing is not thread-safe and must be initialised on the EDT).</p>
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
  */
 public final class SimulationApp {
 
