@@ -8,7 +8,8 @@ import ecosystem.interfaces.Actable;
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
- * Base class for entities that have biological needs and age over time.
+ * * Base class for all entities that run as independent threads.
+ * Manages biological states (energy, age) and lifecycle synchronization.
  */
 public abstract class LivingEntity extends AbstractEntity implements Actable, Runnable {
     private int age = 0;

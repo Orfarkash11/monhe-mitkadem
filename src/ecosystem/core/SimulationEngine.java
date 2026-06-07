@@ -9,6 +9,14 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
+ * * Orchestrates the ecosystem simulation using a multithreaded architecture.
+ * Manages a thread-safe command queue (Producer-Consumer pattern) to handle
+ * entity actions without race conditions.
+ */
+
 public class SimulationEngine {
     private final List<SimulationObserver> observers = Collections.synchronizedList(new ArrayList<>());
     private final BlockingQueue<Command> commandQueue = new LinkedBlockingQueue<>();

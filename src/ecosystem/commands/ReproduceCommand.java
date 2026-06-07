@@ -3,7 +3,10 @@ package ecosystem.commands;
 import ecosystem.core.Environment;
 import ecosystem.entities.AbstractEntity;
 import ecosystem.entities.LivingEntity;
-
+/**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
+ */
 public class ReproduceCommand implements Command {
     private final AbstractEntity child;
 

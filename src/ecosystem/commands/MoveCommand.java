@@ -3,7 +3,10 @@ package ecosystem.commands;
 import ecosystem.core.Environment;
 import ecosystem.core.Position;
 import ecosystem.entities.animals.Animal;
-
+/**
+ * Or Farkash 314920984
+ * Oleg Magit 312544752
+ */
 public class MoveCommand implements Command {
     private final Animal animal;
     private final Position targetPosition;
