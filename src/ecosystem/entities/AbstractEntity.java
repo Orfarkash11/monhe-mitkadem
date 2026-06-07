@@ -1,6 +1,7 @@
 package ecosystem.entities;
 
 import ecosystem.core.Position;
+import ecosystem.interfaces.Actable;
 
 /**
  * Or Farkash 314920984
@@ -99,5 +100,13 @@ public abstract class AbstractEntity {
         if (symbol != that.symbol) return false;
         if (alive != that.alive) return false;
         return position != null ? position.equals(that.position) : that.position == null;
+    }
+    /**
+     * Polymorphic method to retrieve this entity as an Actable.
+     * Overridden in subclasses that actually perform actions.
+     * @return the Actable instance, or null if the entity cannot act.
+     */
+    public Actable getActable() {
+        return null;
     }
 }

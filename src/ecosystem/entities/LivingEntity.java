@@ -145,4 +145,8 @@ public abstract class LivingEntity extends AbstractEntity implements Actable {
         LivingEntity that = (LivingEntity) o;
         return age == that.age && energy == that.energy && maxEnergy == that.maxEnergy;
     }
+    @Override
+    public Actable getActable() {
+        return this;
+    }
 }

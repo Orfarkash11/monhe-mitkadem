@@ -47,8 +47,9 @@ public class SimulationEngine {
 
         // 2. Perform actions for all actable entities
         for (AbstractEntity entity : snapshot) {
-            if (entity.isAlive() && entity instanceof Actable) {
-                ((Actable) entity).act(environment);
+            Actable actable = entity.getActable();
+            if (entity.isAlive() && actable != null) {
+                actable.act(environment);
             }
         }
 
