@@ -1,12 +1,15 @@
 package ecosystem.gui;
 
 import ecosystem.core.Environment;
+import ecosystem.core.Position;
 import ecosystem.core.SimulationEngine;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import ecosystem.entities.AbstractEntity;
+import ecosystem.entities.LivingEntity;
 
 /**
  * Or Farkash 314920984
@@ -28,7 +31,6 @@ public class ControlPanel extends JPanel {
     private final JSlider   speedSlider;
 
     // ── Background thread state ──────────────────────────────────────────────
-    private volatile Thread runThread  = null;
     private volatile boolean running   = false;
 
     /** Minimum delay between ticks in continuous mode (ms). Higher = slower. */
@@ -49,6 +51,9 @@ public class ControlPanel extends JPanel {
         this.engine      = engine;
         this.environment = environment;
         this.mapPanel    = mapPanel;
+
+        JButton btnAddRandom = new JButton("🎲 Add Random");
+        btnAddRandom.addActionListener(this::onAddRandomEntities);
 
         setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Controls",
@@ -84,6 +89,7 @@ public class ControlPanel extends JPanel {
         c.gridy = 2; add(btnStop,      c);
         c.gridy = 3; add(btnReset,     c);
         c.gridy = 4; add(btnAddEntity, c);
+        c.gridy = 7; add(btnAddRandom, c);
 
         JLabel speedLabel = new JLabel("Speed:", SwingConstants.LEFT);
         c.gridy = 5; add(speedLabel,   c);
@@ -92,88 +98,74 @@ public class ControlPanel extends JPanel {
 
     // ── Action handlers ──────────────────────────────────────────────────────
 
-    /**
-     * Executes exactly one simulation tick synchronously.
-     * Safe to call from the EDT because tick() is fast and non-blocking.
-     */
     private void onSingleTick(ActionEvent e) {
-        if (!running) {
-            engine.tick();
-        }
+        JOptionPane.showMessageDialog(this, "Single Tick is disabled in Multithreading mode.");
     }
 
-    /**
-     * Starts the continuous run loop in a background daemon thread.
-     * The thread reads the slider value for inter-tick delay and calls
-     * {@link SimulationEngine#tick()} in a loop until {@link #stopRun()} is invoked.
-     */
     private void onContinuousRun(ActionEvent e) {
-        if (running) return;
-        running   = true;
+        if (engine.isRunning()) return;
         setRunningState(true);
 
-        runThread = new Thread(() -> {
-            while (running) {
-                engine.tick();   // Model notifies observers via SwingUtilities.invokeLater
+        engine.startSimulation();
 
-                int delayMs = sliderToDelayMs();
-                try {
-                    Thread.sleep(delayMs);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
+        for (AbstractEntity entity : engine.getEnvironment().getEntities()) {
+            if (entity instanceof LivingEntity) {
+                LivingEntity le = (LivingEntity) entity;
+                le.setEngine(engine);
+                le.startThread();
             }
-            SwingUtilities.invokeLater(() -> setRunningState(false));
-        }, "SimulationRunThread");
-
-        runThread.setDaemon(true);
-        runThread.start();
+        }
     }
 
     /**
      * Signals the background thread to stop and restores button states.
      */
     private void onStop(ActionEvent e) {
-        stopRun();
+        setRunningState(false);
+
+        // 1. Stop the simulation engine
+        engine.stopSimulation();
+
+        // 2. Stop all living entity threads
+        for (AbstractEntity entity : engine.getEnvironment().getEntities()) {
+            if (entity instanceof LivingEntity) {
+                ((LivingEntity) entity).stopThread();
+            }
+        }
     }
 
-    /**
-     * Stops any running loop, resets the model, and refreshes the view.
-     */
     private void onReset(ActionEvent e) {
-        stopRun();
-        engine.reset();              // Engine calls notifyObservers() → EDT refresh
+        // First, explicitly stop all threads safely
+        onStop(null);
+
+        // Then reset the engine and update UI
+        engine.reset();
+        mapPanel.refresh(environment);
     }
 
-    /**
-     * Opens the {@link AddEntityDialog} and, if the user confirmed an entity,
-     * adds it to the environment and triggers a manual view refresh.
-     */
     private void onAddEntity(ActionEvent e) {
         Window parent = SwingUtilities.getWindowAncestor(this);
         AddEntityDialog dialog = new AddEntityDialog(
                 parent instanceof JFrame ? (JFrame) parent : null,
                 environment);
-        dialog.setVisible(true);   // blocks until dialog is closed
+        dialog.setVisible(true);
 
         if (dialog.wasConfirmed()) {
-            // The dialog already added the entity to the environment;
-            // force a repaint (the next tick will also do this automatically)
+            for (AbstractEntity entity : engine.getEnvironment().getEntities()) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity le = (LivingEntity) entity;
+                    le.setEngine(engine);
+                    if (engine.isRunning()) {
+                        le.startThread();
+                    }
+                }
+            }
             mapPanel.refresh(environment);
         }
     }
 
     // ── Private helpers ──────────────────────────────────────────────────────
 
-    /** Stops the run loop and interrupts the thread. */
-    private void stopRun() {
-        running = false;
-        if (runThread != null) {
-            runThread.interrupt();
-            runThread = null;
-        }
-    }
 
     /** Enables or disables controls to reflect running vs. idle state. */
     private void setRunningState(boolean isRunning) {
@@ -204,5 +196,35 @@ public class ControlPanel extends JPanel {
         s.setPaintLabels(false);
         s.setToolTipText("Left = slower, Right = faster");
         return s;
+    }
+    private void onAddRandomEntities(ActionEvent e) {
+        java.util.Random rnd = new java.util.Random();
+        int count = 5 + rnd.nextInt(6); // בוחר בין 5 ל-10 ישויות מכל סוג
+
+        for (int i = 0; i < count; i++) {
+            Position pos = new Position(rnd.nextInt(environment.getRows()), rnd.nextInt(environment.getCols()));
+
+            int type = rnd.nextInt(5);
+            AbstractEntity entity = null;
+
+            switch (type) {
+                case 0: entity = new ecosystem.entities.animals.Rabbit(pos); break;
+                case 1: entity = new ecosystem.entities.animals.Deer(pos); break;
+                case 2: entity = new ecosystem.entities.animals.Lion(pos); break;
+                case 3: entity = new ecosystem.entities.plants.OakTree(pos); break;
+                case 4: entity = new ecosystem.entities.plants.Flower(pos); break;
+            }
+
+            if (entity != null && environment.addEntity(entity)) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity le = (LivingEntity) entity;
+                    le.setEngine(engine);
+                    if (engine.isRunning()) {
+                        le.startThread();
+                    }
+                }
+            }
+        }
+        mapPanel.refresh(environment);
     }
 }

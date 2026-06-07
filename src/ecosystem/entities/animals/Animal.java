@@ -2,13 +2,13 @@ package ecosystem.entities.animals;
 
 import ecosystem.behaviors.FeedingBehavior;
 import ecosystem.behaviors.MovementStrategy;
+import ecosystem.commands.Command;
 import ecosystem.core.Environment;
 import ecosystem.core.Position;
 import ecosystem.entities.AbstractEntity;
 import ecosystem.entities.LivingEntity;
 import ecosystem.interfaces.*;
 import java.util.List;
-
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
@@ -20,15 +20,6 @@ public abstract class Animal extends LivingEntity implements EdibleByCarnivore, 
     private MovementStrategy movementStrategy;
     private FeedingBehavior feedingBehavior;
 
-    /**
-     * Constructs an Animal.
-     * @param position initial position.
-     * @param symbol character representation.
-     * @param energy initial energy.
-     * @param maxEnergy maximum energy.
-     * @param movementStrategy strategy for moving.
-     * @param feedingBehavior strategy for eating.
-     */
     public Animal(Position position, char symbol, int energy, int maxEnergy,
                   MovementStrategy movementStrategy, FeedingBehavior feedingBehavior) {
         super(position, symbol, energy, maxEnergy, null);
@@ -36,91 +27,59 @@ public abstract class Animal extends LivingEntity implements EdibleByCarnivore, 
         this.feedingBehavior = feedingBehavior;
     }
 
-    /**
-     * @return 80% of current energy as nutrition.
-     */
     @Override
-    public int getNutritionValue() {
-        return (int) (getEnergy() * 0.8);
-    }
+    public int getNutritionValue() { return (int) (getEnergy() * 0.8); }
 
-    /**
-     * Sets the animal to dead when consumed.
-     * @return true always.
-     */
     @Override
-    public boolean onConsumed() {
-        return setAlive(false);
-    }
+    public boolean onConsumed() { return setAlive(false); }
 
-    /**
-     * Senses nearby entities in the environment.
-     * @param env the environment.
-     * @return list of detected entities.
-     */
     @Override
     public List<AbstractEntity> sense(Environment env) {
         if (env == null) return new java.util.ArrayList<>();
         return env.getNearbyEntities(getPosition());
     }
 
-    /**
-     * Delegates movement to the movement strategy.
-     * @param env the environment.
-     * @return true if moved successfully.
-     */
     @Override
     public boolean move(Environment env) {
-        if (movementStrategy != null) {
-            return movementStrategy.move(this, env);
+        if (movementStrategy != null && getEngine() != null) {
+            Command moveCmd = movementStrategy.getCommand(this, env);
+            if (moveCmd != null) {
+                getEngine().submitCommand(moveCmd);
+                return true;
+            }
         }
         return false;
     }
 
-    /**
-     * Consumes a target, gaining energy up to maxEnergy.
-     * @param target the consumable to eat.
-     * @return true if target was consumed.
-     */
     @Override
     public boolean eat(Consumable target) {
         if (target == null) return false;
-        
         int nutrition = target.getNutritionValue();
-        setEnergy(getEnergy() + nutrition); // setEnergy handles capping at maxEnergy in LivingEntity
+        setEnergy(getEnergy() + nutrition);
         return target.onConsumed();
     }
 
-    /**
-     * Performs the animal's action cycle: age, move, eat.
-     * @param env the environment.
-     * @return true if the cycle completed (even if move/eat failed).
-     */
     @Override
     public boolean act(Environment env) {
-        // 1. Biological update
-        if (!super.act(env)) {
-            return false;
-        }
+        if (!super.act(env)) return false;
 
-        // 2. Sense
         List<AbstractEntity> nearby = sense(env);
+        Command eatCmd = (feedingBehavior != null) ? feedingBehavior.getCommand(this, nearby) : null;
 
-        // 3. Move
-        move(env);
-
-        // 4. Eat
-        if (feedingBehavior != null) {
-            feedingBehavior.eat(this, nearby);
+        if (eatCmd != null && getEngine() != null) {
+            getEngine().submitCommand(eatCmd);
+        } else if (getEnergy() < getMaxEnergy() / 2 && getEngine() != null) {
+            synchronized (getEngine().resourceLock) {
+                try {
+                    getEngine().resourceLock.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+            }
         }
 
+        move(env);
         return true;
-    }
-
-    /**
-     * @return the current vision range.
-     */
-    protected int getVisionRange() {
-        return visionRange;
     }
 }
