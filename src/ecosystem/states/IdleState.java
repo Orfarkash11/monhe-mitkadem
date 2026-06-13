@@ -8,36 +8,43 @@ import ecosystem.entities.animals.Animal;
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
- * * Pattern: State
- * Animal moves randomly or stands still, losing 1 energy per tick.
+ * Pattern: State
+ * * Represents an idle state where the animal moves randomly and loses minimal energy.
  */
 public class IdleState implements EntityState {
 
+    /**
+     * Executes the idle behavior, consisting of random movement and slow energy loss.
+     *
+     * @param entity the living entity performing the action
+     */
     @Override
     public void doAction(LivingEntity entity) {
         if (!(entity instanceof Animal)) return;
         Animal animal = (Animal) entity;
 
-        // איבוד 1 אנרגיה כפי שנדרש
         animal.reduceEnergy(1);
 
         Environment env = animal.getEngine() != null ? animal.getEngine().getEnvironment() : null;
         if (env != null) {
-            // מסתובב רנדומלית או עומד במקום (50% סיכוי לזוז)
             if (Math.random() > 0.5) {
                 animal.move(env);
             }
 
-            // בדיקה האם הגענו לפינה כדי לעבור לישון
             checkSleepingCondition(animal, env);
         }
 
-        // מעבר למצב רעב אם האנרגיה צונחת מתחת ל-30%
         if (animal.getEnergy() < animal.getMaxEnergy() * 0.3) {
             animal.setState(new HungryState());
         }
     }
 
+    /**
+     * Checks if the animal is in a corner of the environment to transition to a sleeping state.
+     *
+     * @param animal the animal to check
+     * @param env    the current environment
+     */
     private void checkSleepingCondition(Animal animal, Environment env) {
         Position pos = animal.getPosition();
         if (pos == null) return;

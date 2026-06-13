@@ -11,31 +11,34 @@ import java.util.List;
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
- * * Pattern: State
- * Animal seeks food actively and loses 5 energy per tick.
+ * Pattern: State
+ * * Represents a state where the animal actively seeks food and loses energy rapidly.
  */
 public class HungryState implements EntityState {
 
+    /**
+     * Executes the hungry behavior, which includes seeking food, losing energy,
+     * and potentially transitioning to other states.
+     *
+     * @param entity the living entity performing the action
+     */
     @Override
     public void doAction(LivingEntity entity) {
         if (!(entity instanceof Animal)) return;
         Animal animal = (Animal) entity;
 
-        // איבוד 5 אנרגיה כפי שנדרש בהנחיות
         animal.reduceEnergy(5);
 
         Environment env = animal.getEngine() != null ? animal.getEngine().getEnvironment() : null;
         if (env != null) {
             List<AbstractEntity> nearby = animal.sense(env);
 
-            // מנסה למצוא אוכל
             Command eatCmd = animal.getFeedingBehavior() != null ?
                     animal.getFeedingBehavior().getCommand(animal, nearby) : null;
 
             if (eatCmd != null && animal.getEngine() != null) {
                 animal.getEngine().submitCommand(eatCmd);
             } else {
-                // אם רעב מאוד ואין אוכל - נכנס למצב המתנה (Wait) כדי למנוע Deadlock/לולאת סרק מהמטלה הקודמת
                 if (animal.getEnergy() < animal.getMaxEnergy() / 2 && animal.getEngine() != null) {
                     synchronized (animal.getEngine().resourceLock) {
                         try {
@@ -46,20 +49,23 @@ public class HungryState implements EntityState {
                         }
                     }
                 }
-                // נע לכיוון משאבים/חיפוש אוכל
                 animal.move(env);
             }
 
-            // בדיקת פינות לשינה
             checkSleepingCondition(animal, env);
         }
 
-        // מעבר חזרה למצב בטלה אם האנרגיה התמלאה מעל 80%
         if (animal.getEnergy() > animal.getMaxEnergy() * 0.8) {
             animal.setState(new IdleState());
         }
     }
 
+    /**
+     * Checks if the animal is in a corner of the environment to transition to a sleeping state.
+     *
+     * @param animal the animal to check
+     * @param env    the current environment
+     */
     private void checkSleepingCondition(Animal animal, Environment env) {
         Position pos = animal.getPosition();
         if (pos == null) return;

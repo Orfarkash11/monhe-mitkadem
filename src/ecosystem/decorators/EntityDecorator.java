@@ -10,7 +10,8 @@ import ecosystem.interfaces.EdibleByHerbivore;
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
- * * Pattern: Decorator
+ * Pattern: Decorator
+ * * Abstract base class for all entity decorators, delegating properties to the wrapped entity.
  */
 public abstract class EntityDecorator extends LivingEntity
         implements Consumable, EdibleByCarnivore, EdibleByHerbivore {
@@ -18,8 +19,12 @@ public abstract class EntityDecorator extends LivingEntity
     protected LivingEntity decoratedEntity;
     protected int duration = 10;
 
+    /**
+     * Constructs a new decorator wrapping the specified living entity.
+     *
+     * @param decoratedEntity the underlying entity to be decorated
+     */
     public EntityDecorator(LivingEntity decoratedEntity) {
-        // תיקון: העברת Environment במקום SimulationEngine לבנאי של LivingEntity
         super(
                 decoratedEntity.getPosition(),
                 decoratedEntity.getSymbol(),
@@ -30,6 +35,12 @@ public abstract class EntityDecorator extends LivingEntity
         this.decoratedEntity = decoratedEntity;
     }
 
+    /**
+     * Executes the decorator's action, reducing its active duration.
+     *
+     * @param env the current simulation environment
+     * @return true if the decorator is still active, false otherwise
+     */
     @Override
     public boolean act(Environment env) {
         duration--;
@@ -40,13 +51,25 @@ public abstract class EntityDecorator extends LivingEntity
         return true;
     }
 
+    /**
+     * Removes the decorator from the entity and restores the original entity in the environment.
+     */
     protected void removeDecorator() {
         if (getEngine() != null) {
             getEngine().replaceEntity(this, decoratedEntity);
         }
     }
 
-    // --- תיקון כל החתימות וסוגי ההחזרה בדיוק לפי ההגדרות שלך ---
+    /**
+     * Retrieves the original entity that is wrapped by this decorator.
+     *
+     * @return the original living entity
+     */
+    public LivingEntity getDecoratedEntity() {
+        return decoratedEntity;
+    }
+
+    // --- Delegated Methods ---
 
     @Override
     public Position getPosition() {
@@ -67,7 +90,6 @@ public abstract class EntityDecorator extends LivingEntity
     @Override
     public boolean setEnergy(int e) {
         if (decoratedEntity != null) {
-            // עקיפה בטוחה מכיוון ש-setEnergy הוא protected במקור
             int diff = e - decoratedEntity.getEnergy();
             if (diff > 0) return decoratedEntity.addEnergy(diff);
             if (diff < 0) return decoratedEntity.reduceEnergy(-diff);
@@ -121,8 +143,10 @@ public abstract class EntityDecorator extends LivingEntity
         return super.toString();
     }
 
+    /**
+     * Returns the name of the specific decorator.
+     *
+     * @return the name of the decorator
+     */
     protected abstract String getDecoratorName();
-    public LivingEntity getDecoratedEntity() {
-        return decoratedEntity;
-    }
 }

@@ -17,13 +17,27 @@ import java.lang.reflect.Method;
  * Or Farkash 314920984
  * Oleg Magit 312544752
  * Pattern: Factory Method
+ * * Factory class responsible for creating all ecosystem entities,
+ * decoupling the GUI from concrete implementations.
  */
 public class EntityFactory {
 
+    /**
+     * Supported entity types available for creation.
+     */
     public static final String[] SUPPORTED_TYPES = {
             "Lion", "Deer", "Rabbit", "OakTree", "Flower", "Rock", "Water"
     };
 
+    /**
+     * Creates a new entity based on the provided type string.
+     *
+     * @param type          the string representation of the entity type
+     * @param pos           the position where the entity will be placed
+     * @param initialEnergy the initial energy value to set for the entity
+     * @return a new instance of AbstractEntity corresponding to the requested type
+     * @throws IllegalArgumentException if the provided type is unknown
+     */
     public static AbstractEntity createEntity(String type, Position pos, int initialEnergy) {
         AbstractEntity entity;
 
