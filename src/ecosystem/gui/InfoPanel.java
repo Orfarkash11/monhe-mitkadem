@@ -1,6 +1,10 @@
 package ecosystem.gui;
 
 import ecosystem.core.Position;
+import ecosystem.entities.LivingEntity;
+import ecosystem.decorators.EntityDecorator;
+import ecosystem.decorators.PoisonedDecorator;
+import ecosystem.decorators.SpeedBoostDecorator;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -16,6 +20,11 @@ public class InfoPanel extends JPanel {
     private final JLabel    posLabel;
     private final JTextArea detailArea;
 
+    // --- שדות חדשים עבור הדקורטור ---
+    private JButton applyPoisonBtn;
+    private JButton applySpeedBtn;
+    private LivingEntity currentSelectedEntity = null;
+
     /**
      * Constructs the info panel with a fixed preferred width.
      *
@@ -26,7 +35,7 @@ public class InfoPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Selected Entity",
                 TitledBorder.LEFT, TitledBorder.TOP));
-        setPreferredSize(new Dimension(preferredWidth, 200));
+        setPreferredSize(new Dimension(preferredWidth, 230)); // הגדלתי מעט את הגובה כדי שיהיה מקום לכפתורים
 
         JPanel header = new JPanel(new GridLayout(2, 1, 2, 2));
         typeLabel = new JLabel("Type: —");
@@ -45,6 +54,40 @@ public class InfoPanel extends JPanel {
         add(header,                              BorderLayout.NORTH);
         add(new JScrollPane(detailArea),         BorderLayout.CENTER);
 
+        // --- הוספת אזור הכפתורים בתחתית ---
+        applyPoisonBtn = new JButton("start poisoning");
+        applySpeedBtn = new JButton("start speed boost");
+        applyPoisonBtn.setEnabled(false);
+        applySpeedBtn.setEnabled(false);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 4, 4));
+        buttonPanel.add(applyPoisonBtn);
+        buttonPanel.add(applySpeedBtn);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        // --- הגדרת פעולות הלחיצה על הכפתורים ---
+        applyPoisonBtn.addActionListener(e -> {
+            if (currentSelectedEntity != null && currentSelectedEntity.getEngine() != null) {
+                PoisonedDecorator pd = new PoisonedDecorator(currentSelectedEntity);
+                currentSelectedEntity.getEngine().replaceEntity(currentSelectedEntity, pd);
+                currentSelectedEntity = pd; // עדכון הרפרנס
+                // כיבוי הכפתורים כדי לא לאפשר לשים דקורטור על דקורטור
+                applyPoisonBtn.setEnabled(false);
+                applySpeedBtn.setEnabled(false);
+            }
+        });
+
+        applySpeedBtn.addActionListener(e -> {
+            if (currentSelectedEntity != null && currentSelectedEntity.getEngine() != null) {
+                SpeedBoostDecorator sd = new SpeedBoostDecorator(currentSelectedEntity);
+                currentSelectedEntity.getEngine().replaceEntity(currentSelectedEntity, sd);
+                currentSelectedEntity = sd; // עדכון הרפרנס
+                // כיבוי הכפתורים כדי לא לאפשר לשים דקורטור על דקורטור
+                applyPoisonBtn.setEnabled(false);
+                applySpeedBtn.setEnabled(false);
+            }
+        });
+
         showEmpty();
     }
 
@@ -59,12 +102,27 @@ public class InfoPanel extends JPanel {
     public void display(Object entity, Position position) {
         if (entity == null) {
             showEmpty();
+            // איפוס הבחירה וכיבוי הכפתורים
+            currentSelectedEntity = null;
+            applyPoisonBtn.setEnabled(false);
+            applySpeedBtn.setEnabled(false);
             return;
         }
         typeLabel.setText("Type: " + entity.getClass().getSimpleName());
         posLabel.setText ("Position: (" + position.getCol() + ", " + position.getRow() + ")");
         detailArea.setText(entity.toString());
         detailArea.setCaretPosition(0);
+
+        // --- הלוגיקה שמדליקה את הכפתורים רק אם נבחרה ישות חיה שאינה כבר דקורטור ---
+        if (entity instanceof LivingEntity && !(entity instanceof EntityDecorator)) {
+            currentSelectedEntity = (LivingEntity) entity;
+            applyPoisonBtn.setEnabled(true);
+            applySpeedBtn.setEnabled(true);
+        } else {
+            currentSelectedEntity = null;
+            applyPoisonBtn.setEnabled(false);
+            applySpeedBtn.setEnabled(false);
+        }
     }
 
     // ── Private ──────────────────────────────────────────────────────────────

@@ -1,6 +1,7 @@
 package ecosystem.core;
 
 import ecosystem.commands.Command;
+import ecosystem.entities.LivingEntity;
 import ecosystem.gui.observer.SimulationObserver;
 import ecosystem.gui.observer.SimulationEvent;
 import java.util.ArrayList;
@@ -133,5 +134,19 @@ public class SimulationEngine {
     @Override
     public String toString() {
         return "SimulationEngine environment=" + environment;
+    }
+
+    public void replaceEntity(LivingEntity oldEntity, LivingEntity newEntity) {
+
+        oldEntity.stopSimulation();
+        environment.removeEntity(oldEntity);
+        newEntity.setEngine(this);
+        environment.addEntity(newEntity);
+
+        if (newEntity.isAlive()) {
+            newEntity.resumeSimulation();
+            Thread t = new Thread(newEntity);
+            t.start();
+        }
     }
 }

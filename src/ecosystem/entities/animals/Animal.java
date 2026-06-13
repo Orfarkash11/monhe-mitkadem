@@ -9,6 +9,8 @@ import ecosystem.entities.AbstractEntity;
 import ecosystem.entities.LivingEntity;
 import ecosystem.interfaces.*;
 import java.util.List;
+import ecosystem.states.EntityState;
+import ecosystem.states.IdleState;
 /**
  * Or Farkash 314920984
  * Oleg Magit 312544752
@@ -19,12 +21,14 @@ public abstract class Animal extends LivingEntity implements EdibleByCarnivore, 
     private int visionRange = 2;
     private MovementStrategy movementStrategy;
     private FeedingBehavior feedingBehavior;
+    private EntityState currentState;
 
     public Animal(Position position, char symbol, int energy, int maxEnergy,
                   MovementStrategy movementStrategy, FeedingBehavior feedingBehavior) {
         super(position, symbol, energy, maxEnergy, null);
         this.movementStrategy = movementStrategy;
         this.feedingBehavior = feedingBehavior;
+        this.currentState = new IdleState();
     }
 
     @Override
@@ -61,25 +65,30 @@ public abstract class Animal extends LivingEntity implements EdibleByCarnivore, 
 
     @Override
     public boolean act(Environment env) {
-        if (!super.act(env)) return false;
+        if (!isAlive()) return false;
 
-        List<AbstractEntity> nearby = sense(env);
-        Command eatCmd = (feedingBehavior != null) ? feedingBehavior.getCommand(this, nearby) : null;
+        incrementAge();
 
-        if (eatCmd != null && getEngine() != null) {
-            getEngine().submitCommand(eatCmd);
-        } else if (getEnergy() < getMaxEnergy() / 2 && getEngine() != null) {
-            synchronized (getEngine().resourceLock) {
-                try {
-                    getEngine().resourceLock.wait();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return false;
-                }
-            }
+        if (currentState != null) {
+            currentState.doAction(this);
         }
 
-        move(env);
-        return true;
+        if (getEnergy() <= 0) {
+            setEnergy(0);
+            setAlive(false);
+        }
+
+        return isAlive();
+    }
+    public void setState(EntityState state) {
+        this.currentState = state;
+    }
+
+    public EntityState getState() {
+        return currentState;
+    }
+
+    public FeedingBehavior getFeedingBehavior() {
+        return feedingBehavior;
     }
 }

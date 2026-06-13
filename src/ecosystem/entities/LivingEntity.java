@@ -72,7 +72,7 @@ public abstract class LivingEntity extends AbstractEntity implements Actable, Ru
 
     public int getEnergy() { return this.energy; }
 
-    protected boolean setEnergy(int energy) {
+    public boolean setEnergy(int energy) {
         if (energy > maxEnergy) {
             this.energy = maxEnergy;
         } else if (energy < 0) {
@@ -141,5 +141,11 @@ public abstract class LivingEntity extends AbstractEntity implements Actable, Ru
     @Override
     public Actable getActable() {
         return this;
+    }
+    public void resumeSimulation() {
+        this.running = true;
+    }
+    public void stopSimulation() {
+        this.running = false;
     }
 }

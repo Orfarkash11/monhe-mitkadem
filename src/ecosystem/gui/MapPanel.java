@@ -109,7 +109,15 @@ public class MapPanel extends JPanel {
                 // Icon
                 Position pos = new Position(col, row);
                 Object entity = getEntityAt(pos);
-                ImageManager.EntityType type = imgMgr.resolveType(entity);
+
+                // --- תוספת לטיפול בדקורטורים ---
+                Object entityToDraw = entity;
+                if (entity instanceof ecosystem.decorators.EntityDecorator) {
+                    entityToDraw = ((ecosystem.decorators.EntityDecorator) entity).getDecoratedEntity();
+                }
+
+                // מבקש תמונה עבור החיה המקורית, גם אם היא עטופה
+                ImageManager.EntityType type = imgMgr.resolveType(entityToDraw);
                 ImageIcon icon = imgMgr.getIcon(type);
                 g2.drawImage(icon.getImage(), px, py, cellSize, cellSize, this);
 

@@ -3,13 +3,7 @@ package ecosystem.gui;
 import ecosystem.core.Environment;
 import ecosystem.core.Position;
 import ecosystem.entities.AbstractEntity;
-import ecosystem.entities.animals.Lion;
-import ecosystem.entities.animals.Deer;
-import ecosystem.entities.animals.Rabbit;
-import ecosystem.entities.plants.OakTree;
-import ecosystem.entities.plants.Flower;
-import ecosystem.entities.resources.Rock;
-import ecosystem.entities.resources.Water;
+import ecosystem.factories.EntityFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -136,32 +130,8 @@ public class AddEntityDialog extends JDialog {
             // (e.g., Lion sets energy to 100). We show that default energy in
             // the dialog, but we cannot override it here because the
             // constructors do not accept an energy parameter.
-            AbstractEntity entity;
-            switch (type) {
-                case "Lion":
-                    entity = new Lion(pos);
-                    break;
-                case "Deer":
-                    entity = new Deer(pos);
-                    break;
-                case "Rabbit":
-                    entity = new Rabbit(pos);
-                    break;
-                case "OakTree":
-                    entity = new OakTree(pos);
-                    break;
-                case "Flower":
-                    entity = new Flower(pos);
-                    break;
-                case "Rock":
-                    entity = new Rock(pos);
-                    break;
-                case "Water":
-                    entity = new Water(pos);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown type: " + type);
-            }
+            int energy = (int) energySpinner.getValue();
+            AbstractEntity entity = EntityFactory.createEntity(type, pos, energy);
 
             environment.addEntity(entity);
 
